@@ -38,38 +38,20 @@ consumer = KafkaConsumer('reaction',bootstrap_servers=['my-kafka-0.my-kafka-head
 for msg in consumer:
     record = json.loads(msg.value)
     print(record)
-    name = record['name']
+    userid = record['userid']
+    objectid = record['objectid']
+    reactionid = record['reactionid']
+    print("hola :)")
 
 
     # Create dictionary and ingest data into MongoDB
     try:
-        tkdapp_rec = {'name': name}
+        tkdapp_rec = {'userid': userid, 'objectid': objectid, 'reactionid': reactionid}
         print(tkdapp_rec)
-        tkdapp_id = db.tkdapp_info.insert_one(tkdapp_rec)
+        tkdapp_id = db.tkdapp_reactions.insert_one(tkdapp_rec)
         print("Data inserted with record ids", tkdapp_id)
 
         subprocess.call(['sh', './test.sh'])
     except Exception as e:
         print("Could not insert into MongoDB")
         print(e)
-
-    # Create memes_summary and insert groups into MongoDB
-    try:
-        agg_result = db.tkdapp_info.aggregate([
-            {
-                "$group": {
-                    "_id": "$name",
-                    "n": {"$sum": 1}
-                }
-            }
-        ])
-        db.tkdapp_summary.delete_many({})
-        for i in agg_result:
-            print(i)
-            summary_id = db.tkdapp_summary.insert_one(i)
-            print("Summary inserted with record ids", summary_id)
-
-    except Exception as e:
-        print(f'group by caught {type(e)}')
-        print(e)
-

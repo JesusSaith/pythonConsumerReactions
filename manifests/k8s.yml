@@ -13,7 +13,7 @@ spec:
         app: kafka-consumer-reactions
     spec:
       containers:
-      - image: docker.io/btoarriola/kafka-consumer-reactions:{github.sha}
+      - image: docker.io/{docker_user}/{model_name}:{github.sha}
         name: kafka-consumer-reactions
 #        envFrom:
 #        - configMapRef:

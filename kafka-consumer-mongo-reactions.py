@@ -28,7 +28,7 @@ try:
     client.admin.command('ping')
     print("Pinged your deployment. You successfully connected to MongoDB!")
 
-    db = client.tkdapp
+    db = client.memes
     print("MongoDB Connected successfully todo bien hasta aqui!")
 except:
     print("Could not connect to MongoDB Aquiii")
@@ -46,10 +46,10 @@ for msg in consumer:
 
     # Create dictionary and ingest data into MongoDB
     try:
-        tkdapp_rec = {'userid': userid, 'objectid': objectid, 'reactionid': reactionid}
-        print(tkdapp_rec)
-        tkdapp_id = db.tkdapp_reactions.insert_one(tkdapp_rec)
-        print("Data inserted with record ids", tkdapp_id)
+        memes_rec = {'userid': userid, 'objectid': objectid, 'reactionid': reactionid}
+        print(memes_rec)
+        memes_id = db.memes_reaction.insert_one(memes_rec)
+        print("Data inserted with record ids", memes_id)
 
         subprocess.call(['sh', './test.sh'])
     except Exception as e:
@@ -57,7 +57,7 @@ for msg in consumer:
         print(e)
     # Create bdnosql_sumary and insert groups into mongodb
     try:
-        agg_result = db.memes_reactions.aggregate([
+        agg_result = db.memes_reaction.aggregate([
         {
             "$group": {
                 "_id": {
@@ -68,10 +68,10 @@ for msg in consumer:
             }
         }
     ])
-        db.memes_reactions_sumary.delete_many({})
+        db.memes_reaction_sumary.delete_many({})
         for i in agg_result:
             print(i)
-            sumary_id = db.memes_reactions_sumary.insert_one(i)
+            sumary_id = db.memes_reaction_sumary.insert_one(i)
             print("Sumary Reactions inserted with record ids: ", sumary_id)
             
     except Exception as e:

@@ -57,7 +57,7 @@ for msg in consumer:
         print(e)
     # Create bdnosql_sumary and insert groups into mongodb
     try:
-        agg_result = db.tkdapp_reactions.aggregate([
+        agg_result = db.memes_reactions.aggregate([
         {
             "$group": {
                 "_id": {
@@ -68,10 +68,10 @@ for msg in consumer:
             }
         }
     ])
-        db.tkdapp_reactions_sumary.delete_many({})
+        db.memes_reactions_sumary.delete_many({})
         for i in agg_result:
             print(i)
-            sumary_id = db.tkdapp_reactions_sumary.insert_one(i)
+            sumary_id = db.memes_reactions_sumary.insert_one(i)
             print("Sumary Reactions inserted with record ids: ", sumary_id)
             
     except Exception as e:
